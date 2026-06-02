@@ -1,0 +1,65 @@
+ body{
+            background-color: #b466a1;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+        }
+
+        form{
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        .btn{
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #7d3c6d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        
+        #resp{
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #e7a7cf;
+            color: #4b2341;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        a{
+            margin-top: 25px;
+            padding: 150px;
+            border-radius: 15px;
+            background-color: #e7a7cf;
+            font-family: 'Segoe UI', sans-serif;
+            color: #4b2341;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }

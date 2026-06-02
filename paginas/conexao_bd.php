@@ -12,7 +12,6 @@ try{
         $user,
         $pass
     );
-    echo "Conexão com o Postgres realizada!<br>";
 }catch(PDOException $e){
     echo "Erro: " . $e->getMessage();
 }
