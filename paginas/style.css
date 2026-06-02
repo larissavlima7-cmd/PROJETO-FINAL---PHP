@@ -63,3 +63,22 @@
             max-width: 500px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
+
+         .dashboard{
+            align-items: center;
+            justify-items: center;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #e7a7cf;
+            color: #4b2341;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        header{
+            background-color: black;
+            display: flex;
+            
+        }

@@ -57,8 +57,6 @@ if(isset($_POST["nome"], $_POST["senha"])){
         echo "<div id='resp'>$erro</div>";
     }
     ?>
-   
-
     
 </body>
 </html>

@@ -18,7 +18,7 @@ if (!isset($_SESSION['id_usuario'])) { //vai confirmar se a pessoa realmete fez 
     </style>
 </head>
 <body>
-    <h1>Aromas da Lari 💐✨</h1>
+    <header>Aromas da Lari 💐✨</header>
     <p>Olá, <?php echo $_SESSION['nome_usuario'];?>!!</p>
     <br>
     <br>
