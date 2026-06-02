@@ -19,14 +19,18 @@ CREATE TABLE produtos(
     preco DECIMAL NOT NULL
 );
 
+CREATE TABLE status_pedido(
+    id SERIAL PRIMARY KEY,
+    descricao TEXT NOT NULL
+)
+
 CREATE TABLE pedidos(
     id SERIAL PRIMARY KEY,
     idClientes INT REFERENCES clientes(id),
     idUsuarios INT REFERENCES usuarios(id),
     idProdutos INT REFERENCES produtos(id),
     quantidade INT NOT NULL,
-    status 
-
+    idStatus INT REFERENCES status_pedido(id)
 )
 
 
