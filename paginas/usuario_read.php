@@ -1,11 +1,6 @@
 <?php
-session_start();
-if (!isset($_SESSION['id_usuario'])) { //vai confirmar se a pessoa realmete fez o login, e não acessou direto pelo endereço
-    header("Location: login.php");
-    exit;
-}
-require_once "conexao_bd.php";
-$sql="SELECT * FROM usuarios";
+include "if_isset.php";
+$sql="SELECT * FROM usuarios ORDER BY id ASC";
 
 //stmt = statement refere-se a um objeto PDO Statement no contexto do PDO
 $stmt=$conexao->prepare($sql);
@@ -14,10 +9,12 @@ $stmt->execute();
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-<!DOCTYPE html><html class="light" lang="pt-br" style=""><head>
+<!DOCTYPE html>
+<html class="light" lang="pt-br" style="">
+<head>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Gerenciamento de Usuários | USU Perfumery</title>
+<title>Gerenciamento de Usuários | Usuarios Perfumaria</title>
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect">
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
@@ -148,7 +145,8 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </style>
 </head>
-<body class="bg-background font-body-md text-on-background min-h-screen"><a href="/" class="left-margin-mobile md:left-margin-desktop z-50 group flex items-center gap-2 py-2 bg-surface/60 backdrop-blur-md border border-outline-variant/30 rounded-full text-on-surface-variant hover:text-primary hover:border-primary/40 hover:scale-105 transition-all soft-glow py-3 px-8 relative mt-8 w-fit">
+<body class="bg-background font-body-md text-on-background min-h-screen">
+<a href="home.php" class="left-margin-mobile md:left-margin-desktop z-50 group flex items-center gap-2 py-2 bg-surface/60 backdrop-blur-md border border-outline-variant/30 rounded-full text-on-surface-variant hover:text-primary hover:border-primary/40 hover:scale-105 transition-all soft-glow py-3 px-8 relative mt-8 w-fit">
     <span class="material-symbols-outlined text-[20px]">arrow_back</span>
     <span class="font-label-md text-label-md">Voltar</span>
 </a>
@@ -159,10 +157,10 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">
 <div>
 <h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mb-2">Gerenciamento de Usuários</h2>
-<p class="text-on-surface-variant max-w-xl opacity-80">Gerencie sua equipe de artesãos e administradores da Aromas da Lari nesta interface etérea e funcional.</p>
+<p class="text-on-surface-variant max-w-xl opacity-80">Gerencie sua equipe da Aromas da Lari nesta interface maravilhosa.</p>
 </div>
 <button class="group flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-full font-bold shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-95 transition-all">
-<span class="material-symbols-outlined" data-weight="fill">add_circle</span>
+<a href="usuario_create.php" class="material-symbols-outlined" data-weight="fill">add_circle</a>
 <span class="">Adicionar Usuário</span>
 </button>
 </div>
@@ -202,9 +200,9 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a href="usuario_update.php?id=<?php echo $usu['id']; ?>" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-lg transition-all material-symbols-outlined">
                 edit
             </a>
-            <a href="usuario_delete.php?id=<?php echo $usu['id']; ?>" class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg transition-all material-symbols-outlined">
+            <button data-id="<?php echo $usu['id']; ?>" data-nome="<?php echo $usu['nome']; ?>" class="delete-trigger p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg transition-all material-symbols-outlined">
                 delete
-            </a>
+            </button>
         </div>
     </td>
 
@@ -214,11 +212,53 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 </div>
 </div>
+<div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4" id="delete-modal">
+<div class="absolute inset-0 bg-on-surface/20 backdrop-blur-md" id="modal-overlay"></div>
+<div class="glass-card rounded-3xl p-8 max-w-md w-full relative z-10 soft-glow border border-outline-variant/30">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">Confirmação de Exclusão de Usuário</h3>
+<p class="text-on-surface-variant mb-8 opacity-80">Você tem certeza que deseja excluir o funcionário <strong id="modal-user-name" class="text-on-surface"></strong>? Esta ação não poderá ser desfeita.</p>
+<div class="flex gap-4 justify-end">
+<button class="px-6 py-3 rounded-full font-medium text-on-surface-variant hover:bg-surface-container-high transition-all" id="close-modal-btn">Cancelar</button>
+<a id="confirm-delete-btn" href="#" class="px-6 py-3 bg-error text-on-error rounded-full font-bold shadow-lg shadow-error/10 hover:scale-[1.02] active:scale-95 transition-all text-center">Excluir</a>
+</div>
+</div>
+</div>
 </main>
 <script>
-        // Micro-interactions and Atmospheric Effects
         document.addEventListener('DOMContentLoaded', () => {
-            // Subtle parallax effect on glass cards
+            const deleteModal = document.getElementById('delete-modal');
+            const deleteTriggers = document.querySelectorAll('.delete-trigger');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalUserName = document.getElementById('modal-user-name');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+            const showModal = (id, nome) => {
+                // Insere o nome do usuário no texto da modal
+                modalUserName.textContent = nome;
+                // Define o link correto com o ID para deletar
+                confirmDeleteBtn.href = `usuario_delete.php?id=${id}`;
+                
+                deleteModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; 
+            };
+
+            const hideModal = () => {
+                deleteModal.classList.add('hidden');
+                document.body.style.overflow = 'auto'; 
+            };
+
+            deleteTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const id = trigger.getAttribute('data-id');
+                    const nome = trigger.getAttribute('data-nome');
+                    showModal(id, nome);
+                });
+            });
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
+            if (modalOverlay) modalOverlay.addEventListener('click', hideModal);
+
             const cards = document.querySelectorAll('.glass-card');
             
             document.addEventListener('mousemove', (e) => {
@@ -235,17 +275,6 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     card.style.transform = `translate(${moveX}px, ${moveY}px)`;
                 });
             });
-
-            // Smooth search focus interaction
-            const searchInput = document.querySelector('input[type="text"]');
-            if (searchInput) {
-                searchInput.addEventListener('focus', () => {
-                    searchInput.parentElement.classList.add('scale-[1.02]');
-                });
-                searchInput.addEventListener('blur', () => {
-                    searchInput.parentElement.classList.remove('scale-[1.02]');
-                });
-            }
         });
     </script>
 
