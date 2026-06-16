@@ -1,5 +1,5 @@
 <?php
-include "if_isset.php";
+include "if_isset.php"; //importa o arquivo if_isset
 ?>
 <!DOCTYPE html><html class="light" lang="pt-br"><head>
 <meta charset="utf-8">
@@ -124,12 +124,7 @@ include "if_isset.php";
     </script>
 </head>
 <body class="text-on-background font-body-md overflow-x-hidden">
-<!-- Side Navigation Shell -->
-
-<!-- Main Content Area -->
 <main class="min-h-screen flex flex-col">
-<!-- Top Navigation Bar -->
-
 <!-- Canvas / Dashboard Content -->
 <section class="flex-1 p-6 md:p-12 max-w-container-max mx-auto w-full space-y-12 flex flex-col justify-center">
 <a href="login.php" class="h-10 w-10 rounded-xl bg-error/10 text-error hover:bg-error hover:text-white flex items-center justify-center transition-all duration-200" title="Sair do Sistema">
@@ -137,12 +132,12 @@ include "if_isset.php";
 </a>
 <!-- Welcome Header -->
 <div class="space-y-2 animate-fade-in">
-<h2 class="font-headline-lg text-headline-lg text-primary">Bem-vinda de volta, <?php echo $_SESSION['nome_usuario'];?>!</h2>
+<h2 class="font-headline-lg text-headline-lg text-primary">Bem-vinda de volta, <?php echo $_SESSION['nome_usuario'];?>!</h2> <!--puxa o nome do usuario-->
 <p class="text-secondary font-body-lg max-w-2xl opacity-80">Seu painel administrativo para gestão. Veja o que mudou desde seu último acesso.</p>
 </div>
 <!-- Bento Quick Access Grid (Sketch inspired) -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
-<!-- USUARIOS -->
+<!-- Bloco Usuarios -->
 <div class="glass-panel p-8 rounded-3xl glow-sky group hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4 cursor-pointer" style="opacity: 1; transform: translateY(0px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
 <div class="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
 <span class="material-symbols-outlined text-3xl" data-icon="badge">badge</span>
@@ -155,7 +150,7 @@ include "if_isset.php";
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>
-<!-- CLIENTES-->
+<!-- Bloco Clientes-->
 <div class="glass-panel p-8 rounded-3xl glow-rose group hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4 cursor-pointer" style="opacity: 1; transform: translateY(0px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
 <div class="h-14 w-14 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
 <span class="material-symbols-outlined text-3xl" data-icon="group">group</span>
@@ -168,7 +163,7 @@ include "if_isset.php";
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>
-<!-- PRODUTOS-->
+<!--Bloco Produtos-->
 <div class="glass-panel p-8 rounded-3xl glow-sky group hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4 cursor-pointer" style="opacity: 1; transform: translateY(0px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
 <div class="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
 <span class="material-symbols-outlined text-3xl" data-icon="label_important">label_important</span>
@@ -181,7 +176,7 @@ include "if_isset.php";
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>
-<!-- PEDIDOS-->
+<!--Bloco de pedidos-->
 <div class="glass-panel p-8 rounded-3xl glow-rose group hover:-translate-y-1 transition-all duration-300 flex flex-col gap-4 cursor-pointer" style="opacity: 1; transform: translateY(0px); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
 <div class="h-14 w-14 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors duration-300">
 <span class="material-symbols-outlined text-3xl" data-icon="shopping_bag">shopping_bag</span>
@@ -195,16 +190,10 @@ include "if_isset.php";
 </div>
 </div>
 </div>
-<!-- Secondary Layout: Quick Stats & Activity -->
-<!-- Sketch Reference Section (As requested) -->
 </section>
-<!-- Footer Shell -->
-
 </main>
-<!-- Floating Action Button (FAB) - For Home/Dashboard Context -->
 
 <script>
-        // Simple entrance animations for cards
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.glass-panel');
             cards.forEach((card, index) => {
@@ -218,6 +207,7 @@ include "if_isset.php";
             });
         });
     </script>
-
-
+    <footer class="mt-12 text-center">
+        <p class="text-xs text-[#3f484c]/50 mt-2">©2026 Aromas da Lari. Todos os direitos reservados.</p>
+    </footer>
 </body></html>

@@ -1,33 +1,36 @@
 <?php
+//importação do arquivo if isset para evitar a repetição
 include "if_isset.php";
 
+//parte para pegar as informações que foram digitadas no formulário
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
     $telefone = isset($_POST['telefone']) ? trim($_POST['telefone']) : '';
     $cep = isset($_POST['cep']) ? trim($_POST['cep']) : '';
     $numerocasa = isset($_POST['numerocasa']) ? trim($_POST['numerocasa']) : '';
 
+    //Verificação das variaveis
     if (!empty($nome) && !empty($telefone) && !empty($cep) && !empty($numerocasa)) {
         
-        // 1. VALIDAÇÃO DO NOME: Permite apenas letras e espaços (ignora acentos)
         // preg_match verifica se o nome contém caracteres inválidos como números ou símbolos
+        // para validar o nome, permitindo apenas letras e espaços, ignorando os acentos
         if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/", $nome)) {
             $mensagem_erro = "O campo Nome deve conter apenas letras e espaços. Remova números ou símbolos.";
         } 
-        // 2. VALIDAÇÃO DO TELEFONE: Deve conter apenas números
-        elseif (!ctype_digit($telefone)) {
-            $mensagem_erro = "O campo Telefone deve conter apenas números (ex: 19999999999). Não utilize espaços, parênteses ou traços.";
+        // para validar o telefone, permitindo apenas os 11 números para o telefone
+        elseif (!preg_match('/^[0-9]{11}$/', $telefone)) {
+             $mensagem_erro = "O campo Telefone deve conter exatamente 11 números (ex: 19999999999).";
         }
-        // 3. VALIDAÇÃO DO CEP: Deve conter apenas números
+        //para validar o cep, ele só pode ter números
         elseif (!ctype_digit($cep)) {
             $mensagem_erro = "O campo CEP deve conter apenas números (ex: 13460000). Não utilize letras ou traços.";
         } 
-        // 4. VALIDAÇÃO DO NÚMERO DA CASA: Deve conter apenas números
+        //validando para que o campo numero da casa não recebe letras, nem simbolos e sim números
         elseif (!ctype_digit($numerocasa)) {
             $mensagem_erro = "O campo Número deve ser um valor numérico válido. Se não houver número, coloque 0.";
         } 
         else {
-            // Se passou em todas as validações, executa a gravação na base de dados com segurança
+            // Se todas as validações estiverem ok, ele vai executar  e inserir os dados no banco de dados
             $sql = "INSERT INTO clientes(nome, telefone, cep, numerocasa) VALUES (?, ?, ?, ?)";
             $stmt = $conexao->prepare($sql);
             
@@ -43,11 +46,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else {
         $mensagem_erro = "Por favor, preencha todos os campos.";
     }
-}
-
-if (isset($_SESSION['sucesso'])) {
-    $mensagem_sucesso = $_SESSION['sucesso'];
-    unset($_SESSION['sucesso']);
 }
 ?>
 <!DOCTYPE html>
@@ -81,34 +79,39 @@ if (isset($_SESSION['sucesso'])) {
         <header class="text-center mb-8">
             <h1 class="font-['Playfair_Display'] text-4xl font-bold text-[#0c6780] mb-2">Novo Cliente</h1>
             <p class="text-[#3f484c]">Preencha os dados do cliente para adicioná-lo ao sistema.</p>
-            
+
             <?php if(!empty($mensagem_erro)): ?>
+                <!-- Caso de erro (salvar no banco/campos sem preencher/erro de validação) vai aparecer o erro na tela -->
                 <div class="mt-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm font-medium text-left flex items-center gap-2 animate-fade-in">
                     <span class="material-symbols-outlined text-red-500">error</span>
                     <?php echo $mensagem_erro; ?>
                 </div>
+            <!-- Para fechar o if, usa ele para facilitar ao invés de as chaves q podem deixar bagunça -->
             <?php endif; ?>
         </header>
 
         <form id="addUserForm" method="POST" action="" class="glass-panel p-8 rounded-2xl space-y-6 shadow-sm">
             
             <div>
+                <!-- recebe o nome -->
                 <label class="block text-xs font-semibold uppercase tracking-wider text-[#0c6780] mb-2" for="nome">Nome Completo</label>
                 <input class="w-full bg-[#f5f3f3]/50 border-[#bfc8cd] rounded-lg p-3.5 text-sm transition-all placeholder:text-[#6f787d]/50" 
                        id="nome" name="nome" placeholder="Ex: Maria Silva" required 
                        pattern="[a-zA-ZÀ-ÿ\s]+" title="O nome deve conter apenas letras e espaços."
-                       type="text" value="<?php echo htmlspecialchars($nome ?? ''); ?>"/>
+                       type="text" value="<?php echo htmlspecialchars($nome ?? ''); ?>"/> <!--  htmlspecialchars serve para proteger de hackers, para caso a pessoa pegue e digite um código no campo ao invés do nome-->
             </div>
 
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wider text-[#0c6780] mb-2" for="telefone">Telefone / Telemóvel (Apenas números)</label>
+                <!-- recebe o telefone -->
+                <label class="block text-xs font-semibold uppercase tracking-wider text-[#0c6780] mb-2" for="telefone">Telefone (Apenas números)</label>
                 <input class="w-full bg-[#f5f3f3]/50 border-[#bfc8cd] rounded-lg p-3.5 text-sm transition-all placeholder:text-[#6f787d]/50" 
                        id="telefone" name="telefone" placeholder="Ex: 19999999999" required 
                        inputmode="numeric" pattern="[0-9]+" title="O telefone deve conter apenas números, sem espaços ou símbolos."
-                       type="text" value="<?php echo htmlspecialchars($telefone ?? ''); ?>"/>
+                       type="tel" value="<?php echo htmlspecialchars($telefone ?? ''); ?>"/>
             </div>
 
             <div>
+                <!-- recebe o CEP -->
                 <label class="block text-xs font-semibold uppercase tracking-wider text-[#0c6780] mb-2" for="cep">CEP (Apenas números)</label>
                 <input class="w-full bg-[#f5f3f3]/50 border-[#bfc8cd] rounded-lg p-3.5 text-sm transition-all placeholder:text-[#6f787d]/50" 
                        id="cep" name="cep" placeholder="Ex: 13460000" required 
@@ -117,6 +120,7 @@ if (isset($_SESSION['sucesso'])) {
             </div>
 
             <div>
+                <!-- Recebe o número da casa -->
                 <label class="block text-xs font-semibold uppercase tracking-wider text-[#0c6780] mb-2" for="numerocasa">Número da Residência</label>
                 <input class="w-full bg-[#f5f3f3]/50 border-[#bfc8cd] rounded-lg p-3.5 text-sm transition-all placeholder:text-[#6f787d]/50" 
                        id="numerocasa" name="numerocasa" placeholder="Ex: 123" required 
@@ -125,6 +129,7 @@ if (isset($_SESSION['sucesso'])) {
             </div>
 
             <div class="pt-2">
+                <!-- botão para confirmar a operação -->
                 <button class="w-full bg-[#0c6780] text-white font-medium py-4 rounded-lg flex items-center justify-center gap-2 btn-bloom transition-all duration-300 hover:scale-[1.01] active:scale-[0.98]" type="submit">
                     <span class="material-symbols-outlined">person_add</span>
                     Adicionar Cliente
@@ -132,9 +137,8 @@ if (isset($_SESSION['sucesso'])) {
             </div>
         </form>
     </main>
-
+<!-- Rodapé da página -->
     <footer class="mt-12 text-center">
-        <p class="font-['Playfair_Display'] text-primary/40 tracking-tight text-[#7b5455]/40 italic">Aura Management</p>
         <p class="text-xs text-[#3f484c]/50 mt-2">©2026 Aromas da Lari. Todos os direitos reservados.</p>
     </footer>
 </body>

@@ -1,6 +1,6 @@
 <?php
-include "if_isset.php";
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+include "if_isset.php";//inclui o arquivo if_isset
+if (!isset($_GET['id']) || empty($_GET['id'])) {// vai impedir que acessa a página sem saber qual cliente vamos editar
     header("Location: cliente_read.php");
     exit;
 }
@@ -19,7 +19,7 @@ if (!$cli) {
     exit;
 }
 
-// 3. PROCESSA O FORMULÁRIO QUANDO FOR ENVIADO (MÉTODO POST)
+// vai processar os dados para pegar as informações do cliente
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = isset($_POST['nome']) ? trim($_POST['nome']) : '';
     $telefone = isset($_POST['telefone']) ? trim($_POST['telefone']) : '';
@@ -28,24 +28,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if (!empty($nome) && !empty($telefone) && !empty($cep) && !empty($numerocasa)) {
         
-        // 1. VALIDAÇÃO DO NOME: Permite apenas letras e espaços (incluindo acentos)
+        // para validar o nome, permitindo apenas letras e espaços, ignorando os acentos
         if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/", $nome)) {
             $mensagem_erro = "O campo Nome deve conter apenas letras e espaços. Remova números ou símbolos.";
         } 
-        // 2. VALIDAÇÃO DO TELEFONE: Deve conter apenas números
+       // para validar o telefone, permitindo apenas os 11 números para o telefone
         elseif (!ctype_digit($telefone)) {
             $mensagem_erro = "O campo Telefone deve conter apenas números (ex: 19999999999). Não utilize espaços, parênteses ou traços.";
         }
-        // 3. VALIDAÇÃO DO CEP: Deve conter apenas números (exatamente 8 números)
+       //para validar o cep, ele só pode ter números
         elseif (!ctype_digit($cep)) {
             $mensagem_erro = "O campo CEP deve conter apenas números (ex: 13460000). Não utilize letras ou traços.";
         } 
-        // 4. VALIDAÇÃO DO NÚMERO DA CASA: Deve conter apenas números
+        //validando para que o campo numero da casa não recebe letras, nem simbolos e sim números
         elseif (!ctype_digit($numerocasa)) {
             $mensagem_erro = "O campo Número deve ser um valor numérico válido. Se não houver número, coloque 0.";
         } 
         else {
-            // Se passar em todas as validações, executa o UPDATE na base de dados com segurança
+            // Se passar em todas as validações, executa o UPDATE no bd
             $sql_update = "UPDATE clientes SET nome = ?, telefone = ?, cep = ?, numerocasa = ? WHERE id = ?";
             $stmt_update = $conexao->prepare($sql_update);
             
@@ -62,10 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-if (isset($_SESSION['sucesso'])) {
-    $mensagem_sucesso = $_SESSION['sucesso'];
-    unset($_SESSION['sucesso']);
-}
 ?>
 <!DOCTYPE html>
 <html class="light" lang="pt-br">
@@ -100,10 +96,12 @@ if (isset($_SESSION['sucesso'])) {
             <p class="text-[#3f484c]">Modifique os campos abaixo para atualizar as informações do cliente.</p>
             
             <?php if(!empty($mensagem_erro)): ?>
+                <!-- Caso de erro (salvar no banco/campos sem preencher/erro de validação) vai aparecer o erro na tela -->
                 <div class="mt-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm font-medium text-left flex items-center gap-2 animate-fade-in">
                     <span class="material-symbols-outlined text-red-500">error</span>
                     <?php echo $mensagem_erro; ?>
                 </div>
+                 <!-- Para fechar o if, usa ele para facilitar ao invés de as chaves q podem deixar bagunça -->
             <?php endif; ?>
         </header>
 
@@ -122,7 +120,7 @@ if (isset($_SESSION['sucesso'])) {
                 <input class="w-full bg-[#f5f3f3]/50 border-[#bfc8cd] rounded-lg p-3.5 text-sm transition-all placeholder:text-[#6f787d]/50" 
                        id="telefone" name="telefone" placeholder="Ex: 19999999999" required 
                        inputmode="numeric" pattern="[0-9]+" title="O telefone deve conter apenas números, sem espaços ou símbolos."
-                       type="text" value="<?php echo htmlspecialchars($telefone ?? $cli['telefone']); ?>"/>
+                       type="tel" value="<?php echo htmlspecialchars($telefone ?? $cli['telefone']); ?>"/>
             </div>
 
             <div>
@@ -151,18 +149,20 @@ if (isset($_SESSION['sucesso'])) {
     </main>
 
     <footer class="mt-12 text-center">
-        <p class="font-['Playfair_Display'] text-primary/40 tracking-tight text-[#7b5455]/40 italic">Aura Management</p>
         <p class="text-xs text-[#3f484c]/50 mt-2">©2026 Aromas da Lari. Todos os direitos reservados.</p>
     </footer>
 
     <script>
         document.getElementById('addUserForm').addEventListener('submit', function(e) {
-            // Se o formulário for válido perante as regras do HTML5, altera o texto do botão para feedback visual
+            // Se o formulário for válido para as regras do HTML5, altera o texto do botão para feedback visual
             if(this.checkValidity()) {
                 const btn = this.querySelector('button[type="submit"]');
                 btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Gravando dados...';
             }
         });
     </script>
+    <footer class="mt-12 text-center">
+        <p class="text-xs text-[#3f484c]/50 mt-2">©2026 Aromas da Lari. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>

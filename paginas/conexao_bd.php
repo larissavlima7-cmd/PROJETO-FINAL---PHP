@@ -1,5 +1,5 @@
 <?php
-
+//Conecta o sistema com o bd
 $host = "localhost";
 $dbname = "perfumaria";
 $user = "postgres";

@@ -1,12 +1,13 @@
 <?php
-include "if_isset.php";
+include "if_isset.php"; //inclui o aruivo php if_isset
+//comando para listar os clientes da tabela Clientes
 $sql="SELECT * FROM clientes ORDER BY id ASC";
 
-//stmt = statement refere-se a um objeto PDO Statement no contexto do PDO
+//stmt = statement refere-se a um objeto PDO Statement do PDO
 $stmt=$conexao->prepare($sql);
 $stmt->execute();
 
-$cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
+$cliente= $stmt->fetchAll(PDO::FETCH_ASSOC); //vai buscar os clientes e salvar na variavel
 
 ?>
 <!DOCTYPE html>
@@ -166,9 +167,9 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
 </button>
 </div>
 
-<!-- Table Section -->
 <div class="glass-card rounded-3xl overflow-hidden soft-glow border border-outline-variant/20">
 <div class="overflow-x-auto">
+<!-- Cria a tabela e as colunas -->
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container-low/50">
@@ -181,8 +182,9 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/10">
-
+<!-- Vai pegar todos os clientes e listar, o foreach vai permitir q a gnt faça isso sem tem q puxar cliente por cliente -->
 <?php foreach ($cliente as $cli): ?>
+<!-- Vai pegar o clietes e colocar na estrutura de tabela -->
 <tr class="group hover:bg-primary-container/5 transition-colors">
     
     <td class="px-8 py-6 text-on-surface-variant font-medium">
@@ -226,11 +228,14 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </td>
     
+    <!-- coloca os botões de ação para editar e deletar, dentro da tabela -->
     <td class="px-8 py-6 text-right">
         <div class="flex items-center justify-end gap-2">
+            <!-- quando clicar vai direcionar para a página de edição, para editar um usuário especifico que vai ser especificado com id -->
             <a href="cliente_update.php?id=<?php echo $cli['id']; ?>" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-lg transition-all material-symbols-outlined">
                 edit
             </a>
+            <!-- quando clicar ele vai pegar todas as informações do cliente e mandar para o arquivo delete.php -->
             <button data-id="<?php echo $cli['id']; ?>" data-nome="<?php echo $cli['nome']; ?>" data-telefone="<?php echo $cli['telefone'];?>"
              data-cep="<?php echo $cli['cep'];?>" data-numerocasa="<?php echo $cli['numerocasa'];?>" class="delete-trigger p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg transition-all material-symbols-outlined">
                 delete
@@ -239,11 +244,13 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
     </td>
 
 </tr>
+<!-- fecha o bloco foreach sem as chaves -->
 <?php endforeach; ?> </tbody>
 </table>
 </div>
 </div>
 </div>
+<!-- Cria um card sobre a tela para executar o arquivo delete -->
 <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4" id="delete-modal">
 <div class="absolute inset-0 bg-on-surface/20 backdrop-blur-md" id="modal-overlay"></div>
 <div class="glass-card rounded-3xl p-8 max-w-md w-full relative z-10 soft-glow border border-outline-variant/30">
@@ -309,6 +316,8 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         });
     </script>
-
+    <footer class="mt-12 text-center">
+        <p class="text-xs text-[#3f484c]/50 mt-2">©2026 Aromas da Lari. Todos os direitos reservados.</p>
+    </footer>
 
 </body></html>

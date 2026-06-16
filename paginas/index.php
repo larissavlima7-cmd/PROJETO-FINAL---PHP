@@ -1,4 +1,5 @@
 <?php
+//página de login
 session_start();
 require_once "conexao_bd.php";
  // para não dar erro antes de colocar as informações
@@ -185,6 +186,7 @@ if(isset($_POST["nome"], $_POST["senha"])){
 <p class="font-label-md text-label-md text-tertiary">Acesse seu portal de gestão</p>
 </div>
 <form action="#" class="space-y-6" method="POST">
+    <!-- Receber usuário -->
 <div class="space-y-2 group">
 <label class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant px-1" for="user">Usuário</label>
 <div class="relative flex items-center soft-glow-primary transition-all duration-300">
@@ -192,6 +194,7 @@ if(isset($_POST["nome"], $_POST["senha"])){
 <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl py-4 pl-12 pr-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all outline-none" id="nome" name="nome" placeholder="Seu nome" type="text"/>
 </div>
 </div>
+<!-- Receber senha -->
 <div class="space-y-2 group">
 <label class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant px-1" for="password">Senha</label>
 <div class="relative flex items-center soft-glow-primary transition-all duration-300">
@@ -211,6 +214,7 @@ if(isset($_POST["nome"], $_POST["senha"])){
 </div>
 
     <?php
+    //se caso o usuario e senha estiverem errados, vai aparecer uma mensagem de erro no balão rosa
     if (isset($erro)) {
         echo "<div id='resp'>$erro</div>";
     }

@@ -1,7 +1,7 @@
 <?php
-include "if_isset.php";
+include "if_isset.php"; //importa o arquivo if_isset
 
-// Buscar os dados dinâmicos para carregar nos selects do formulário
+// Buscar os dados para o usuário selecionar
 $sql_clientes = "SELECT id, nome FROM clientes ORDER BY nome ASC";
 $stmt_cli = $conexao->prepare($sql_clientes);
 $stmt_cli->execute();
@@ -18,7 +18,7 @@ $stmt_st->execute();
 $status_list = $stmt_st->fetchAll(PDO::FETCH_ASSOC);
 
 
-// PROCESSAMENTO DO FORMULÁRIO
+//vai receber o que foi digitado no formulário
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $cliente = isset($_POST['idclientes']) ? trim($_POST['idclientes']) : '';
     $usuario = isset($_POST['idusuarios']) ? trim($_POST['idusuarios']) : '';
@@ -29,37 +29,36 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $quantidades = isset($_POST['quantidade']) ? $_POST['quantidade'] : [];
 
     if (!empty($cliente) && !empty($usuario) && !empty($status) && !empty($produtos)) {
-        
         // Iniciamos uma transação para garantir que ou salva tudo, ou não salva nada em caso de erro
         $conexao->beginTransaction();
         
         try {
-    // 1. Query para inserir o item no pedido
+    //inserir o item no pedido
     $sql = "INSERT INTO pedidos (idclientes, idusuarios, idprodutos, quantidade, idstatus) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexao->prepare($sql);
     
-    // 2. Query para subtrair a quantidade do estoque do produto
+    //subtrair a quantidade do estoque do produto
     $sql_estoque = "UPDATE produtos SET quant_estoque = quant_estoque - ? WHERE id = ?";
     $stmt_estoque = $conexao->prepare($sql_estoque);
     
-    // NEW: Query para verificar o estoque atual do produto antes da venda
+    // verificar o estoque atual do produto antes da venda
     $sql_check_estoque = "SELECT nome, quant_estoque FROM produtos WHERE id = ?";
     $stmt_check = $conexao->prepare($sql_check_estoque);
     
-    // Loop para percorrer cada produto enviado no formulário
+    //percorre cada produto enviado no formulário
     foreach ($produtos as $index => $id_produto) {
         $qtd = isset($quantidades[$index]) ? (int)trim($quantidades[$index]) : 1;
         $id_produto = trim($id_produto);
         
-        // Só insere se o ID do produto não estiver em branco
+        //vai inserir se o ID do produto não estiver em branco
         if (!empty($id_produto)) {
             
-            // --- VALIDAÇÃO DE ESTOQUE ---
+            // vai buscar o produto no bd
             $stmt_check->execute([$id_produto]);
             $produto_info = $stmt_check->fetch(PDO::FETCH_ASSOC);
             
             if (!$produto_info) {
-                // Se o produto digitado sequer existir no banco
+                // Se o produto não estiver na tabela de produtos, ele exibe o erro
                 throw new Exception("O produto com ID '{$id_produto}' não foi encontrado no sistema.");
             }
             
@@ -67,12 +66,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Se a quantidade solicitada for maior que o estoque atual, interrompe o processo
                 throw new Exception("Estoque insuficiente para o produto '{$produto_info['nome']}' (ID: {$id_produto}). Estoque atual: {$produto_info['quant_estoque']}, Solicitado: {$qtd}.");
             }
-            // -----------------------------
+            
 
-            // Se passou na validação, insere o item do pedido
+            // Se passou na validação, insere o item no pedido
             $stmt->execute([$cliente, $usuario, $id_produto, $qtd, $status]);
             
-            // Subtrai do estoque de produtos
+            // E subtrai do estoque de produtos
             $stmt_estoque->execute([$qtd, $id_produto]);
         }
     }
@@ -219,10 +218,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <p class="text-on-surface-variant max-w-2xl font-body-lg">Preencha as informações abaixo para criar um novo registro de venda.</p>
             
             <?php if(!empty($mensagem_erro)): ?>
+                <!-- Caso de erro (salvar no banco/campos sem preencher/erro de validação) vai aparecer o erro na tela -->
                 <div class="mt-4 p-4 bg-error-container text-on-error-container rounded-lg font-medium">
                     <?php echo $mensagem_erro; ?>
                 </div>
-            <?php endif; ?>
+            <?php endif; ?> <!-- Para fechar o if, usa ele para facilitar ao invés de as chaves q podem deixar bagunça -->
         </header>
 
         <form method="POST" action="">
@@ -234,6 +234,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             <label class="block font-label-md text-label-md text-primary mb-2 uppercase tracking-widest">Funcionário Responsável</label>
                             <select name="idusuarios" required class="w-full bg-surface-container-low border-outline-variant rounded-lg p-4 font-body-md text-on-surface transition-all">
                                 <option disabled selected value="">Selecione o atendente...</option>
+                                <!-- Vai pegar todos os usuários e listar para o usuario escolher. O foreach vai permitir q a gnt faça isso sem tem q puxar usuario por usuario -->
                                 <?php foreach($usuarios as $u): ?>
                                     <option value="<?php echo $u['id']; ?>"><?php echo htmlspecialchars($u['nome']); ?></option>
                                 <?php endforeach; ?>

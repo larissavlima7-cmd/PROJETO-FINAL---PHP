@@ -1,3 +1,4 @@
+<!-- Cabeçalho de algumas páginas -->
 <header class="w-full sticky top-0 z-50 bg-surface/80 glass-header">
 <div class="max-w-container-max mx-auto px-6 md:px-margin-desktop flex justify-between items-center h-20">
 <!-- Back Button -->
