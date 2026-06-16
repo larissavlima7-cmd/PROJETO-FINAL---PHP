@@ -1,15 +1,15 @@
 <?php
-include "if_isset.php"; // Certifique-se de que a conexão está aqui dentro
+include "if_isset.php"; 
 
 if (isset($_GET['id'])) {
-    // Força o ID a ser um número inteiro para evitar SQL Injection e problemas de tipo
+    // Força o ID a ser um número inteiro para evitar problemas 
     $id = (int)$_GET['id']; 
 
     // Inicia a transação para garantir que a devolução ao estoque e a exclusão aconteçam juntas
     $conexao->beginTransaction();
 
     try {
-        // 1. Buscar todos os produtos e quantidades que pertencem a este ID de pedido antes de deletá-lo
+        //Busca todos os produtos e quantidades que pertencem a este ID de pedido antes de deletá-lo
         $sql_busca = "SELECT idprodutos, quantidade FROM pedidos WHERE id = :id";
         $stmt_busca = $conexao->prepare($sql_busca);
         $stmt_busca->bindParam(':id', $id, PDO::PARAM_INT);
@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
 
         // Se o pedido existir no banco de dados, devolve os itens ao estoque
         if (!empty($itens_pedido)) {
-            // 2. Query para devolver a quantidade correta ao estoque de cada produto
+            // devolve a quantidade correta ao estoque de cada produto
             $sql_devolve = "UPDATE produtos SET quant_estoque = quant_estoque + ? WHERE id = ?";
             $stmt_devolve = $conexao->prepare($sql_devolve); //
 
@@ -27,7 +27,7 @@ if (isset($_GET['id'])) {
             }
         }
 
-        // 3. Agora sim, deleta TODOS os registros (linhas) vinculados a este ID de pedido
+        //  deleta TODOS os registros (linhas) vinculados a este ID de pedido
         $sql_delete = "DELETE FROM pedidos WHERE id = :id";
         $stmt_delete = $conexao->prepare($sql_delete); //
         $stmt_delete->bindParam(':id', $id, PDO::PARAM_INT); //
@@ -40,7 +40,7 @@ if (isset($_GET['id'])) {
             header("Location: pedido_read.php"); //
             exit();
         } else {
-            // Se a query de exclusão falhar por algum motivo interno do banco
+            // Se a exclusão falhar por algum motivo interno do banco
             throw new Exception("Falha na execução do comando DELETE.");
         }
 

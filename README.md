@@ -114,3 +114,16 @@ O sistema deve utilizar um Banco de Dados Relacional para garantir a consistênc
 | ------------- | ------------ | ----- | --------- |
 | id            | SERIAL       | PRIMARY KEY | chave primária auto-incrementável. |
 | descricao          | VARCHAR(100) | NOT NULL | Tipo de Status (Entregue, Cancelado, Rota de Entrega, ...) |
+
+### 3.3.2 Segurança e Restauração de Dados
+
+Para garantir a integridade do sistema durante a implantação ou recuperação de falhas, a restauração do banco de dados PostgreSQL deve ser realizada utilizando o  `pg_restore` através do dump oficial do projeto.
+
+**Comando para importação:**
+
+```bash
+pg_restore -U postgres -d perfumaria -v perfumarialari.sql
+
+```
+
+senha para acesso: postgres

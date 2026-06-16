@@ -166,10 +166,10 @@ $pedido= $stmt->fetchAll(PDO::FETCH_ASSOC);
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/10">
-
+<!-- Vai pegar todos os pediso e listar. O foreach vai permitir q a gnt faça isso sem tem q puxar pedido por pedido -->
 <?php foreach ($pedido as $ped): ?>
 <tr class="group hover:bg-primary-container/5 transition-colors">
-    
+    <!-- Organiza eles na tabela -->
     <td class="px-8 py-6 text-on-surface-variant font-medium">
         <?php echo $ped['id']; ?>
     </td>
@@ -222,9 +222,11 @@ $pedido= $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <td class="px-8 py-6 text-right">
         <div class="flex items-center justify-end gap-2">
+            <!-- quando clicar vai direcionar para a página de edição, para editar um pedido especifico que vai ser especificado com id -->
             <a href="pedido_update.php?id=<?php echo $ped['id']; ?>" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-lg transition-all material-symbols-outlined">
                 edit
             </a>
+            <!-- quando clicar ele vai pegar todas as informações do pedido e mandar para o arquivo delete.php -->
             <button data-id="<?php echo $ped['id']; ?>" data-idclientes="<?php echo $ped['idclientes']; ?>" data-isusuarios="<?php echo $ped['idusuarios'];?>"
              data-idprodutos="<?php echo $ped['idprodutos'];?>" data-quantidade="<?php echo $ped['quantidade'];?>" data-status="<?php echo $ped['idstatus'];?>" class="delete-trigger p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg transition-all material-symbols-outlined">
                 delete
@@ -238,7 +240,7 @@ $pedido= $stmt->fetchAll(PDO::FETCH_ASSOC);
 </table>
 </div>
 </div>
-
+<!-- Cria um card sobre a tela para executar o arquivo delete -->
 <div class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4" id="delete-modal">
 <div class="absolute inset-0 bg-on-surface/20 backdrop-blur-md" id="modal-overlay"></div>
 <div class="glass-card rounded-3xl p-8 max-w-md w-full relative z-10 shadow-xl border border-outline-variant/30 bg-white/90">
@@ -250,14 +252,13 @@ $pedido= $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 </div>
 </div>
-
 </main>
-<!-- Footer Component -->
+
 <footer class="w-full bg-surface-container-low border-t border-secondary-container/50">
 <div class="max-w-container-max mx-auto px-6 md:px-margin-desktop py-12 flex flex-col md:flex-row justify-between items-center gap-gutter">
 <div class="flex flex-col items-center md:items-start gap-2">
 <div class="font-headline-sm text-headline-sm text-secondary">Aromas da Lari</div>
-<p class="font-body-md text-body-md text-on-secondary-fixed-variant/70 text-center md:text-left">© 2024 Aromas da Lari. Crafted for the senses.</p>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant/70 text-center md:text-left">© 2026 Aromas da Lari.</p>
 </div>
 <div class="flex gap-8">
 <a class="font-body-md text-body-md text-on-secondary-fixed-variant/70 hover:text-secondary transition-colors duration-200" href="#">Scent Care</a>
