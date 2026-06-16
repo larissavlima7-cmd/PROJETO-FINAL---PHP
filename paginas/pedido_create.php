@@ -245,6 +245,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             <label class="block font-label-md text-label-md text-primary mb-2 uppercase tracking-widest">Cliente</label>
                             <select name="idclientes" required class="w-full bg-surface-container-low border-outline-variant rounded-lg p-4 font-body-md text-on-surface transition-all">
                                 <option disabled selected value="">Vincular um cliente...</option>
+                                 <!-- Vai pegar todos os clientes e listar para o usuario escolher. O foreach vai permitir q a gnt faça isso sem tem q puxar cliente por cliente -->
                                 <?php foreach($clientes as $c): ?>
                                     <option value="<?php echo $c['id']; ?>"><?php echo htmlspecialchars($c['nome']); ?></option>
                                 <?php endforeach; ?>
@@ -255,6 +256,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             <label class="block font-label-md text-label-md text-primary mb-2 uppercase tracking-widest">Status Inicial</label>
                             <input type="hidden" name="idstatus" id="idstatus" value="" required>
                             <div class="flex flex-wrap gap-3">
+                                <!-- Vai pegar todos os status e listar para o usuario escolher. O foreach vai permitir q a gnt faça isso sem tem q puxar status por status -->
                                 <?php foreach($status_list as $st): ?>
                                     <button type="button" data-status-id="<?php echo $st['id']; ?>" class="status-btn px-6 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-md hover:border-primary transition-all">
                                         <?php echo htmlspecialchars($st['descricao']); ?>
