@@ -1,5 +1,6 @@
 <?php
-include "if_isset.php";
+session_start();
+require_once "conexao_bd.php";
  // para não dar erro antes de colocar as informações
 if(isset($_POST["nome"], $_POST["senha"])){
     $nome = $_POST["nome"];

@@ -132,6 +132,9 @@ include "if_isset.php";
 
 <!-- Canvas / Dashboard Content -->
 <section class="flex-1 p-6 md:p-12 max-w-container-max mx-auto w-full space-y-12 flex flex-col justify-center">
+<a href="login.php" class="h-10 w-10 rounded-xl bg-error/10 text-error hover:bg-error hover:text-white flex items-center justify-center transition-all duration-200" title="Sair do Sistema">
+    <span class="material-symbols-outlined text-xl" data-icon="logout">logout</span>
+</a>
 <!-- Welcome Header -->
 <div class="space-y-2 animate-fade-in">
 <h2 class="font-headline-lg text-headline-lg text-primary">Bem-vinda de volta, <?php echo $_SESSION['nome_usuario'];?>!</h2>
@@ -146,7 +149,6 @@ include "if_isset.php";
 </div>
 <div>
 <a href="usuario_read.php" class="font-headline-sm text-headline-sm text-on-surface">Usuários</a>
-<p class="font-label-sm text-label-sm text-secondary uppercase tracking-wider mt-1">2 Colaboradores</p>
 </div>
 <div class="mt-auto pt-4 flex items-center gap-2 text-primary font-bold">
 <a href="usuario_read.php" class="">Gerenciar</a>
@@ -160,10 +162,9 @@ include "if_isset.php";
 </div>
 <div>
 <a href="cliente_read.php" class="font-headline-sm text-headline-sm text-on-surface">Clientes</a>
-<p class="font-label-sm text-label-sm text-secondary uppercase tracking-wider mt-1">10 Clientes Ativos</p>
 </div>
 <div class="mt-auto pt-4 flex items-center gap-2 text-secondary font-bold">
-<a href="cliente_read.php" class="">Ver Base</a>
+<a href="cliente_read.php" class="">Ver Todos</a>
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>
@@ -174,10 +175,9 @@ include "if_isset.php";
 </div>
 <div>
 <a href="produto_read.php" class="font-headline-sm text-headline-sm text-on-surface">Produtos</a>
-<p class="font-label-sm text-label-sm text-secondary uppercase tracking-wider mt-1">30 Essências</p>
 </div>
 <div class="mt-auto pt-4 flex items-center gap-2 text-primary font-bold">
-<a  href="produto_read.php" class="">Inventário</a>
+<a  href="produto_read.php" class="">Ver Mais</a>
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>
@@ -188,10 +188,9 @@ include "if_isset.php";
 </div>
 <div>
 <a href="pedido_read.php" class="font-headline-sm text-headline-sm text-on-surface">Pedidos</a>
-<p class="font-label-sm text-label-sm text-secondary uppercase tracking-wider mt-1">5 Pendentes</p>
 </div>
 <div class="mt-auto pt-4 flex items-center gap-2 text-secondary font-bold">
-<a href="pedido_read.php" class="">Expedição</a>
+<a href="pedido_read.php" class="">Administre</a>
 <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </div>
 </div>

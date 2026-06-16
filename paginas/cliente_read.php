@@ -150,6 +150,7 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
     <span class="material-symbols-outlined text-[20px]">arrow_back</span>
     <span class="font-label-md text-label-md">Voltar</span>
 </a>
+
 <!-- Main Content Area -->
 <main class="min-h-screen px-margin-mobile md:px-margin-desktop">
 <div class="max-w-container-max mx-auto py-12 pt-16">
@@ -227,7 +228,7 @@ $cliente= $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <td class="px-8 py-6 text-right">
         <div class="flex items-center justify-end gap-2">
-            <a href="usuario_update.php?id=<?php echo $cli['id']; ?>" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-lg transition-all material-symbols-outlined">
+            <a href="cliente_update.php?id=<?php echo $cli['id']; ?>" class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-container/20 rounded-lg transition-all material-symbols-outlined">
                 edit
             </a>
             <button data-id="<?php echo $cli['id']; ?>" data-nome="<?php echo $cli['nome']; ?>" data-telefone="<?php echo $cli['telefone'];?>"
