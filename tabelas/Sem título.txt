@@ -1,0 +1,22 @@
+
+INSERT INTO produtos(nome,marca,preco,quant_estoque)VALUES('Perfume Feminino Versace Dylan Turquoise Eau de Toilette', 'Versace', '517.36', '3');
+
+SELECT id,nome,marca,preco,quant_estoque,imagem FROM produtos;
+
+ALTER TABLE produtos ADD COLUMN imagem VARCHAR(255) DEFAULT NULL;
+
+UPDATE produtos 
+SET imagem = 'https://acdn-us.mitiendanube.com/stores/001/073/145/products/dylan_turqouise_versace_perfume-ef9e8d09304c2e1ed317283917085584-1024-1024.jpeg' 
+WHERE id = 1;
+
+INSERT INTO produtos(nome,marca,preco,quant_estoque, imagem)VALUES('COCO MADEMOISELLE', 'Chanel', '799.99', '2', 'https://www.chanel.com/images/t_one/w_0.51,h_0.51,c_crop/q_auto:good,f_autoplus,fl_lossy,dpr_1.1/w_1020/coco-mademoiselle-l-eau-privee-eau-pour-la-nuit-spray-1-7fl-oz--packshot-default-116250-9564865691678.jpg');
+
+INSERT INTO pedidos(idclientes, idusuarios, idprodutos, quantidade, idstatus)VALUES('3', '2', '2', '1', '4');
+
+SELECT id,descricao FROM status_pedido;
+
+SELECT id,nome,cep,numerocasa,telefone FROM clientes;
+
+SELECT id,nome,marca,preco,quant_estoque,imagem FROM produtos;
+
+SELECT id,idclientes,idusuarios,idprodutos,quantidade,idstatus FROM pedidos;
