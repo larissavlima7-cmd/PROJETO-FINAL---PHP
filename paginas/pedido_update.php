@@ -9,7 +9,7 @@ if ($id_pedido_grupo === 0) {
     exit;
 }
 
-// 1. Buscar os dados das tabelas auxiliares para preencher os <select>
+// Buscar os dados das tabelas auxiliares para preencher os <select>
 $sql_clientes = "SELECT id, nome FROM clientes ORDER BY nome ASC";
 $stmt_cli = $conexao->prepare($sql_clientes);
 $stmt_cli->execute();
@@ -26,7 +26,7 @@ $stmt_st->execute();
 $status_list = $stmt_st->fetchAll(PDO::FETCH_ASSOC);
 
 
-// 2. BUSCAR DADOS ATUAIS DO PEDIDO (Para preencher o formulário)
+// BUSCAR DADOS ATUAIS DO PEDIDO (Para preencher o formulário)
 $sql_pedido_atual = "SELECT * FROM pedidos WHERE id = ? LIMIT 1"; 
 $stmt_ped = $conexao->prepare($sql_pedido_atual);
 $stmt_ped->execute([$id_pedido_grupo]);
@@ -43,7 +43,7 @@ $stmt_itens = $conexao->prepare($sql_itens);
 $stmt_itens->execute([$id_pedido_grupo]);
 $itens_atuais = $stmt_itens->fetchAll(PDO::FETCH_ASSOC);
 
-
+// Pega as informações do form
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $cliente = isset($_POST['idclientes']) ? trim($_POST['idclientes']) : '';
     $usuario = isset($_POST['idusuarios']) ? trim($_POST['idusuarios']) : '';
@@ -57,10 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexao->beginTransaction();
         
         try {
-            // ID do status que representa "Cancelado" no seu banco (Ajuste o ID se no seu banco for outro, ex: 3 ou 4)
             $ID_STATUS_CANCELADO = 9; 
 
-            // 1. BUSCAR O ESTADO ANTERIOR DO PEDIDO (Antes de aplicar a atualização)
+            // Busca o estado anterior do pedido (Antes de aplicar a atualização)
             $sql_antigo = "SELECT idprodutos, quantidade, idstatus FROM pedidos WHERE id = ?";
             $stmt_antigo = $conexao->prepare($sql_antigo);
             $stmt_antigo->execute([$id_pedido_grupo]);
@@ -69,23 +68,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Descobre qual era o status antigo (como os itens compartilham o mesmo status, pegamos do primeiro)
             $status_antigo = !empty($itens_antigos) ? $itens_antigos[0]['idstatus'] : null;
 
-            // Criar um mapa (dicionário) dos produtos antigos para facilitar a comparação de quantidades
+            // Cria um dicionario dos produtos antigos para facilitar a comparação de quantidades
             $mapa_antigo = [];
             foreach ($itens_antigos as $item) {
                 $mapa_antigo[$item['idprodutos']] = (int)$item['quantidade'];
             }
 
-            // Preparar as queries que usaremos no laço
+            // Prepara que usaremos no laço
             $stmt_check_est = $conexao->prepare("SELECT nome, quant_estoque FROM produtos WHERE id = ?");
             $stmt_up_est = $conexao->prepare("UPDATE produtos SET quant_estoque = quant_estoque + ? WHERE id = ?");
 
-            // 2. SE O NOVO STATUS FOR CANCELADO (E antes não era cancelado): Devolve tudo ao estoque
+            //se o status for alterado para cancelado: Devolve tudo ao estoque
             if ($status_novo == $ID_STATUS_CANCELADO && $status_antigo != $ID_STATUS_CANCELADO) {
                 foreach ($mapa_antigo as $id_prod_antigo => $qtd_antiga) {
                     $stmt_up_est->execute([$qtd_antiga, $id_prod_antigo]);
                 }
             }
-            // 3. SE O STATUS ERA CANCELADO E AGORA VOLTOU A SER ATIVO: Precisamos subtrair tudo de novo (com validação)
+            // se o status era cancelado e mudou para outro (subtrai do estoque de novo)
             unset($item);
             if ($status_antigo == $ID_STATUS_CANCELADO && $status_novo != $ID_STATUS_CANCELADO) {
                 foreach ($produtos as $index => $id_produto) {
@@ -104,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }
             }
-            // 4. SE O PEDIDO CONTINUA ATIVO (Não foi cancelado nem reativado agora), MAS AS QUANTIDADES PODEM TER MUDADO
+            //se o pedido tiver alterações de quantidade
             if ($status_novo != $ID_STATUS_CANCELADO && $status_antigo != $ID_STATUS_CANCELADO) {
                 foreach ($produtos as $index => $id_produto) {
                     $qtd_nova = isset($quantidades[$index]) ? (int)trim($quantidades[$index]) : 1;
@@ -114,9 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         // Verifica se esse produto já estava no pedido antes
                         $qtd_antiga = isset($mapa_antigo[$id_produto]) ? $mapa_antigo[$id_produto] : 0;
                         
-                        // Diferença = Quantidade Antiga - Quantidade Nova
-                        // Se Nova (5) > Antiga (2) -> Diferença = -3 (precisa retirar 3 do estoque)
-                        // Se Nova (1) > Antiga (3) -> Diferença = +2 (precisa devolver 2 para o estoque)
                         $diferenca = $qtd_antiga - $qtd_nova;
                         
                         if ($diferenca < 0) { 
