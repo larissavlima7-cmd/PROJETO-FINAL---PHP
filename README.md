@@ -153,6 +153,7 @@ psql -U postgres -d perfumaria -f perfumarialari.sql
 ```
 
 **Passo 4:** Acesse a Página
+
 1-Depois do Dump restaurado, no terminal digite: 
 ```
 php -S localhost:8080
