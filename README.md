@@ -116,14 +116,50 @@ O sistema deve utilizar um Banco de Dados Relacional para garantir a consistênc
 | descricao          | VARCHAR(100) | NOT NULL | Tipo de Status (Entregue, Cancelado, Rota de Entrega, ...) |
 
 ### 3.3.2 Segurança e Restauração de Dados
+Para garantir a integridade do sistema durante a implantação ou recuperação de falhas, siga o passo a passo abaixo para clonar o projeto e restaurar o banco de dados PostgreSQL:
 
-Para garantir a integridade do sistema durante a implantação ou recuperação de falhas, a restauração do banco de dados PostgreSQL deve ser realizada utilizando o  `pg_restore` através do dump oficial do projeto.
+**Passo 1:** Clonar o Repositório
 
-**Comando para importação:**
+Abra o terminal e execute:
 
-```bash
-pg_restore -U postgres -d perfumaria -v perfumarialari.sql
+Clone este repositório
+git clone https://github.com/larissavlima7-cmd/Aromas-da-Lari.git
 
+Acesse a pasta do projeto. 
+
+**Passo 2:** Criar o Banco de Dados (PostgreSQL)
+
+Antes de realizar a importação, é necessário garantir que o banco de dados exista e esteja limpo. Siga os comandos abaixo:
+
+1 - Abra o terminal (Prompt de Comando ou PowerShell).
+
+2 - Conecte-se ao PostgreSQL usando o seu usuário principal (geralmente postgres):
+psql -U postgres
+
+3 - Se o banco de dados já existir de testes anteriores, apague-o e crie um novo para evitar conflitos de tabelas. Dentro do terminal interativo do psql, digite:
+```
+DROP DATABASE IF EXISTS perfumaria;
+CREATE DATABASE perfumaria;
 ```
 
-senha para acesso: postgres
+
+**Passo 3:** Executar a Restauração do Banco
+
+1 - No terminal, certifique-se de estar na pasta onde o arquivo perfumarialari.sql está localizado(na raiz).
+
+2 - Execute o comando para importar a estrutura e os dados para o novo banco:
+```
+psql -U postgres -d perfumaria -f perfumarialari.sql
+```
+
+**Passo 4:** Acesse a Página
+1-Depois do Dump restaurado, no terminal digite: 
+```
+php -S localhost:8080
+```
+2- Acesse a página, você irá ver o site, para entrar use:
+
+```
+Usuário: Larissa
+Senha: 74123
+```
